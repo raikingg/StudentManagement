@@ -1,0 +1,14 @@
+schema{
+    query:Query
+}
+type Query{
+    addStudent: Student
+    findAll: [Student]
+
+}
+type Student{
+    studentId:String,
+    studentName:String,
+    city:String,
+    marks:String
+}
