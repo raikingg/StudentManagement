@@ -16,11 +16,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
@@ -53,8 +51,11 @@ public class StudentController {
         DataFetcher<Student> fetcher2 = stud -> {
             return studentService.save(stud.getArgument("studentId"));
         };
+        DataFetcher<Student> fetcher3 = data -> {
+          return studentService.findById(data.getArgument("studentId"));
+        };
         return RuntimeWiring.newRuntimeWiring().type("Query",typeWriting ->
-            typeWriting.dataFetcher("findAll",fetcher1).dataFetcher("addStudent",fetcher2)).build();
+            typeWriting.dataFetcher("findAll",fetcher1).dataFetcher("findById",fetcher3).dataFetcher("addStudent",fetcher2)).build();
 
     }
     @PostMapping("/student")
@@ -70,5 +71,10 @@ public class StudentController {
     public ResponseEntity<Object> getAll(@RequestBody String query){
         ExecutionResult result = graphQL.execute(query);
         return new ResponseEntity<Object>(result,HttpStatus.OK);
+    }
+    @PostMapping("studentById")
+    public ResponseEntity<Object> findById(@RequestBody String query){
+        ExecutionResult result = graphQL.execute(query);
+        return new ResponseEntity<>(result,HttpStatus.OK);
     }
 }
