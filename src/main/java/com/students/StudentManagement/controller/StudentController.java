@@ -10,7 +10,7 @@ import graphql.schema.idl.RuntimeWiring;
 import graphql.schema.idl.SchemaGenerator;
 import graphql.schema.idl.SchemaParser;
 import graphql.schema.idl.TypeDefinitionRegistry;
-import jakarta.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -21,9 +21,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
+
 
 
 
@@ -46,7 +47,7 @@ public class StudentController {
     }
 
     private RuntimeWiring builWiring(){
-        DataFetcher<List<Student>> fetcher1 = data -> {
+        DataFetcher<Iterable<Student>> fetcher1 = data -> {
             return studentService.findAll();
         };
         DataFetcher<Student> fetcher2 = stud -> {
@@ -62,7 +63,7 @@ public class StudentController {
     }
 
     @GetMapping("/student")
-    public ResponseEntity<List<Student>> findAllStudents(){
+    public ResponseEntity<Iterable<Student>> findAllStudents(){
         return new ResponseEntity<>(studentService.findAll(),HttpStatus.OK);
     }
     @PostMapping("/findAll")

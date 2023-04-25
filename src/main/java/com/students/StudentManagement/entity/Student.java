@@ -1,16 +1,17 @@
 package com.students.StudentManagement.entity;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
-@Entity
+@Document(indexName = "student")
 public class Student {
     @Id
     private String studentId;
