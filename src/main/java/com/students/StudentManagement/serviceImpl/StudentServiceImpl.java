@@ -33,7 +33,7 @@ public class StudentServiceImpl implements StudentService {
             student = studentRepository.findById(studentId).get();
         }
         catch (NoSuchElementException noSuchElementException){
-            throw new StudentNotFoundException();
+            throw new StudentNotFoundException("Student with id "+studentId+" doesn't exist.");
         }
         return student;
     }
