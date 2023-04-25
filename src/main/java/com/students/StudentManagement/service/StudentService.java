@@ -9,4 +9,6 @@ public interface StudentService {
     Student save(Student student);
 
     Iterable<Student> findAll();
+
+    Student findById(String studentId);
 }

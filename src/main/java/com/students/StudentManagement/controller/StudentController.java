@@ -53,8 +53,11 @@ public class StudentController {
         DataFetcher<Student> fetcher2 = stud -> {
             return studentService.save(stud.getArgument("studentId"));
         };
+        DataFetcher<Student> fetcher3 = data -> {
+            return studentService.findById(data.getArgument("studentId"));
+        };
         return RuntimeWiring.newRuntimeWiring().type("Query",typeWriting ->
-            typeWriting.dataFetcher("findAll",fetcher1).dataFetcher("addStudent",fetcher2)).build();
+                typeWriting.dataFetcher("findAll",fetcher1).dataFetcher("findById",fetcher3).dataFetcher("addStudent",fetcher2)).build();
 
     }
     @PostMapping("/student")
@@ -70,5 +73,11 @@ public class StudentController {
     public ResponseEntity<Object> getAll(@RequestBody String query){
         ExecutionResult result = graphQL.execute(query);
         return new ResponseEntity<Object>(result,HttpStatus.OK);
+    }
+
+    @PostMapping("studentById")
+    public ResponseEntity<Object> findById(@RequestBody String query){
+        ExecutionResult result = graphQL.execute(query);
+        return new ResponseEntity<>(result,HttpStatus.OK);
     }
 }
