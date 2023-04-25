@@ -1,0 +1,9 @@
+{
+    findAll{
+        studentId
+        studentName
+        city
+        marks
+
+    }
+}
