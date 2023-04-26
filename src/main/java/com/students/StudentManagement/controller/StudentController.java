@@ -1,7 +1,6 @@
 package com.students.StudentManagement.controller;
 
 import com.students.StudentManagement.entity.Student;
-import com.students.StudentManagement.exception.StudentNotFoundException;
 import com.students.StudentManagement.service.StudentService;
 import graphql.ExecutionResult;
 import graphql.GraphQL;
@@ -18,16 +17,19 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 
 
 @RestController
 public class StudentController {
+
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     @Autowired
     private StudentService studentService;
@@ -61,6 +63,7 @@ public class StudentController {
     }
     @PostMapping("/student")
     public ResponseEntity<Student> addStudent(@RequestBody Student student){
+        Student s1 = restTemplate.postForObject("http://localhost:8081/student",student,Student.class);
         return new ResponseEntity<>(studentService.save(student), HttpStatus.CREATED);
     }
 
@@ -78,5 +81,16 @@ public class StudentController {
     public ResponseEntity<Object> findById(@RequestBody String query){
         ExecutionResult result = graphQL.execute(query);
         return new ResponseEntity<>(result,HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteAll(){
+        studentService.deleteAll();
+        return new ResponseEntity<>("Deleted",HttpStatus.NO_CONTENT);
+    }
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteById(@PathVariable String studentId){
+        studentService.deleteById(studentId);
+        return new ResponseEntity<>("Deleted",HttpStatus.NO_CONTENT);
     }
 }

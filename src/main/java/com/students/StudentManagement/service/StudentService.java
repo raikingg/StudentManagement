@@ -11,4 +11,8 @@ public interface StudentService {
     Iterable<Student> findAll();
 
     Student findById(String studentId);
+
+    void deleteAll();
+
+    void deleteById(String studentId);
 }

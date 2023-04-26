@@ -5,16 +5,20 @@ import com.students.StudentManagement.exception.StudentNotFoundException;
 import com.students.StudentManagement.repository.StudentRepository;
 import com.students.StudentManagement.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.function.Supplier;
 
 @Service
 public class StudentServiceImpl implements StudentService {
 
     @Autowired
     private StudentRepository studentRepository;
+
+    Supplier<Iterable<Student>> listOfStudents = ()->{ return studentRepository.findAll();};
 
     @Override
     public Student save(Student student) {
@@ -36,6 +40,16 @@ public class StudentServiceImpl implements StudentService {
             throw new StudentNotFoundException("Student with id "+studentId+" doesn't exist.");
         }
         return student;
+    }
+
+    @Override
+    public void deleteAll() {
+        studentRepository.deleteAll();
+    }
+
+    @Override
+    public void deleteById(String studentId) {
+        studentRepository.deleteById(studentId);
     }
 }
 
